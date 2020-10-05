@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/page_province"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.ProvinceActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-8dp"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dimen_16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btn_back_province"
+
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="@dimen/dimen_16dp"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_arrow_back_white" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Provinsi di Indonesia"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/dimen_16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="(0)"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/dimen_16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout_province"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_province"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dimen_16dp"
+                    android:layout_marginTop="@dimen/dimen_16dp"
+                    android:layout_marginBottom="@dimen/dimen_8dp"
+                    app:cardCornerRadius="@dimen/dimen_8dp"
+                    app:cardElevation="2dp">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/piechart_province"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/dimen_16dp" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rview_province"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>
