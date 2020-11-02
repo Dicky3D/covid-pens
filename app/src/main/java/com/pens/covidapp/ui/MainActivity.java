@@ -10,16 +10,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.pens.covidapp.BuildConfig;
 import com.pens.covidapp.R;
+import com.pens.covidapp.adapter.CountryAdapter;
+import com.pens.covidapp.adapter.ProvinceAdapter;
 import com.pens.covidapp.api.ApiClient;
 import com.pens.covidapp.api.ApiService;
 import com.pens.covidapp.model.covid_01.SummaryWorld;
 import com.pens.covidapp.model.covid_02.Indonesia;
 import com.pens.covidapp.model.covid_country.CountryList;
+import com.pens.covidapp.model.summary.Country;
+import com.pens.covidapp.model.summary.Global;
+import com.pens.covidapp.model.summary.Summary;
 import com.pens.covidapp.utils.Constant;
 import com.pens.covidapp.utils.Utils;
 
@@ -41,14 +49,17 @@ public class MainActivity extends AppCompatActivity {
     TextView txtTotalKasus;
     TextView txtPositif, txtSembuh, txtMati;
 
+    //country
+    CountryAdapter countryAdapter;
+    RecyclerView rvCountry;
+    TextView tvTotalCountry;
+
     //indonesia
     TextView txtIdnKasus, txtIdnPositif, txtIdnSembuh, txtIdnMati, txtPersentaseMati, txtPersentaseSembuh, txtPersentaseKasus;
 
     //button
     TextView txtRiwayat;
     RelativeLayout rlProvinsi;
-
-    RecyclerView rvCountry;
 
 
 
@@ -89,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         //country
         rvCountry = findViewById(R.id.rv_country);
+        tvTotalCountry = findViewById(R.id.tv_total_country);
 
         //button
         rlProvinsi = findViewById(R.id.main_ina_btn_provinsi);
@@ -127,13 +139,13 @@ public class MainActivity extends AppCompatActivity {
             unload(getString(R.string.txt_koneksi_masalah));
             return;
         }
-
-        getTotalData();
+        getSummary();
+//        getTotalData();
 //        getCountry();
     }
 
-    private void getCountry(){
-        Log.d(TAG,"getCountry");
+    private void getCountry() {
+        Log.d(TAG, "getCountry");
 
         if (!Utils.internet(getApplicationContext())) {
             unload(getString(R.string.txt_koneksi_masalah));
@@ -145,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<CountryList> call, Response<CountryList> response) {
-                Log.d(TAG,"onResponse");
+                Log.d(TAG, "onResponse");
                 try {
                     if (response.isSuccessful()) {
-                        Log.d(TAG,"response : "+response.toString());
+                        Log.d(TAG, "response : " + response.toString());
 
                     }
                 } catch (Exception e) {
@@ -166,6 +178,70 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void getSummary() {
+        if (!Utils.internet(getApplicationContext())) {
+            unload(getString(R.string.txt_koneksi_masalah));
+            return;
+        }
+        ApiService apiService = ApiClient.getClient(BuildConfig.BASE_URL_SUMMARY).create(ApiService.class);
+        apiService.getSummary().enqueue(new Callback<Summary>() {
+            @Override
+            public void onResponse(Call<Summary> call, Response<Summary> response) {
+                Log.d(TAG, "onResponse Summary " + response.toString());
+                try {
+                    if (response.isSuccessful()) {
+//                        Log.d(TAG,"Summary "+response.body().toString());
+
+                        Summary summary = response.body();
+
+                        Global global = summary.getGlobal();
+
+
+                        gKasus = global.getTotalConfirmed();
+                        gSembuh = global.getTotalRecovered();
+                        gMati = global.getTotalDeaths();
+
+                        gPositif = gKasus - (gSembuh + gMati);
+
+                        txtTotalKasus.setText(Utils.number("" + gKasus));
+                        txtPositif.setText(Utils.number("" + gPositif));
+                        txtMati.setText(Utils.number("" + gMati));
+                        txtSembuh.setText(Utils.number("" + gSembuh));
+                        String dateUpdate = summary.getDate();
+                        Log.d(TAG, "date : " + dateUpdate);
+
+                        txtUpdate.setText("Diperbarui pada " + Utils.getTimezone(dateUpdate));
+
+                        updateCountry(summary.getCountries());
+
+                        getIndonesia();
+
+                    }
+                } catch (Exception e) {
+                    unload(getString(R.string.txt_koneksi_masalah));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Summary> call, Throwable t) {
+                unload(getString(R.string.txt_koneksi_masalah));
+
+            }
+        });
+    }
+
+    private void updateCountry(List<Country> countries) {
+        tvTotalCountry.setText("("+countries.size()+")");
+        countryAdapter = new CountryAdapter(MainActivity.this, countries,
+                gKasus);
+        rvCountry.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+        rvCountry.setAdapter(countryAdapter);
+        rvCountry.setItemAnimator(new DefaultItemAnimator());
+        rvCountry.setHasFixedSize(true);
+        countryAdapter.notifyDataSetChanged();
+    }
+
+
     private void getTotalData() {
         if (!Utils.internet(getApplicationContext())) {
             unload(getString(R.string.txt_koneksi_masalah));
@@ -176,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
         apiService.getSummaryWorld().enqueue(new Callback<SummaryWorld>() {
             @Override
             public void onResponse(Call<SummaryWorld> call, Response<SummaryWorld> response) {
-                Log.d(TAG,"onResponse TotalData ");
+                Log.d(TAG, "onResponse TotalData ");
                 try {
                     if (response.isSuccessful()) {
                         SummaryWorld sWorld = response.body();
@@ -196,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                         txtUpdate.setText("Diperbarui pada " + Utils.getTimezone(dateUpdate));
 
 //                        getIndonesia();
-                        getCountry();
+                        //getCountry();
                     } else {
                         Log.d(TAG, "koneksi");
 
@@ -261,7 +337,6 @@ public class MainActivity extends AppCompatActivity {
 
                         unload("");
 
-                        getCountry();
                     }
                 } catch (Exception e) {
                     Log.d(TAG, " getIndonesia koneksi");

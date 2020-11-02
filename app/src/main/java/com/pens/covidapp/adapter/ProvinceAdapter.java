@@ -86,9 +86,7 @@ public class ProvinceAdapter extends RecyclerView.Adapter<ProvinceAdapter.ViewHo
         holder.txtProvinsiMati.setText(Utils.number(""+holder.mati));
 
         holder.txtProvinsiKasusPersen.setText(holder.perKasus + "%");
-        holder.txtProvinsiPositifPersen.setText(holder.perPositif + "%");
-        holder.txtProvinsiSembuhPersen.setText(holder.perSembuh + "%");
-        holder.txtProvinsiMatiPersen.setText(holder.perMati + "%");
+
 
     }
 
@@ -99,12 +97,11 @@ public class ProvinceAdapter extends RecyclerView.Adapter<ProvinceAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtProvinsiNama, txtProvinsiKasus, txtProvinsiPositif, txtProvinsiSembuh, txtProvinsiMati,
-                txtProvinsiKasusPersen, txtProvinsiPositifPersen, txtProvinsiSembuhPersen, txtProvinsiMatiPersen;
+                txtProvinsiKasusPersen;
 
         CardView cvProvinsi;
 
-        //        private String nama = "", kasus = "", positif = "", sembuh = "", mati = "",
-//                perKasus = "", perPositif = "", perSembuh = "", perMati = "";
+
         private int  kasus, positif, sembuh, mati;
         private String nama = "", perKasus = "", perPositif = "", perSembuh = "", perMati = "";
 
@@ -116,9 +113,7 @@ public class ProvinceAdapter extends RecyclerView.Adapter<ProvinceAdapter.ViewHo
             txtProvinsiSembuh = itemView.findViewById(R.id.tv_provinsi_sembuh);
             txtProvinsiMati = itemView.findViewById(R.id.tv_provinsi_mati);
             txtProvinsiKasusPersen = itemView.findViewById(R.id.tv_provinsi_kasus_persen);
-            txtProvinsiPositifPersen = itemView.findViewById(R.id.tv_provinsi_positif_persen);
-            txtProvinsiSembuhPersen = itemView.findViewById(R.id.tv_provinsi_sembuh_persen);
-            txtProvinsiMatiPersen = itemView.findViewById(R.id.tv_provinsi_mati_persen);
+
             cvProvinsi = itemView.findViewById(R.id.cv_provinsi);
 
 

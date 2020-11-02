@@ -11,16 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pens.covidapp.R;
 import com.pens.covidapp.model.covid_country.Attributes;
+import com.pens.covidapp.model.summary.Country;
 import com.pens.covidapp.utils.Utils;
 
 import java.util.List;
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHolder> {
     private Context context;
-    private List<Attributes> countryList;
-    private String totalKasus = "";
+    private List<Country> countryList;
+    private int totalKasus ;
 
-    public CountryAdapter(Context context, List<Attributes> countryList, String totalKasus) {
+    public CountryAdapter(Context context, List<Country> countryList, int totalKasus) {
         this.context = context;
         this.countryList = countryList;
         this.totalKasus = totalKasus;
@@ -36,28 +37,41 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull CountryAdapter.ViewHolder holder, int position) {
 
-        Attributes attributes = countryList.get(position);
-        String countryNama = attributes.getCountryRegion();
-        int totKasus = attributes.getConfirmed();
+        Country country = countryList.get(position);
+        String countryNama = country.getCountry();
+        int kasusBaru = country.getNewConfirmed();
+        int totKasus = country.getTotalConfirmed();
+
 
         holder.tvCountryNama.setText(countryNama);
-        holder.tvCountryKasus.setText(""+totKasus);
+        holder.tvCountryKasus.setText(Utils.number(""+totKasus));
+        holder.tvKasusBaru.setText("(+" + kasusBaru + ")");
+
+        String persentase = Utils.persen(totalKasus, totKasus, "2") + "%";
+
+        if (persentase.equalsIgnoreCase("0.0%")
+                || persentase.equalsIgnoreCase("0.00%"))
+            persentase = Utils.persen(totalKasus, totKasus, "4") + "%";
+        holder.tvCountryPersentase.setText(persentase);
+
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return countryList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCountryNama, tvCountryKasus, tvCountryPersentase;
+        TextView tvCountryNama, tvCountryKasus, tvCountryPersentase, tvKasusBaru;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCountryNama = itemView.findViewById(R.id.list_main_country_nama);
             tvCountryKasus = itemView.findViewById(R.id.list_main_country_kasus);
             tvCountryPersentase = itemView.findViewById(R.id.list_main_country_kasus_persentase);
+            tvKasusBaru = itemView.findViewById(R.id.list_main_country_kasus_new);
+
 
         }
     }

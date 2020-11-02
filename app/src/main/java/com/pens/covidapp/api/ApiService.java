@@ -4,6 +4,7 @@ import com.pens.covidapp.model.covid_02.DataProvince;
 import com.pens.covidapp.model.covid_02.Indonesia;
 import com.pens.covidapp.model.covid_02.RootIndonesia;
 import com.pens.covidapp.model.covid_country.CountryList;
+import com.pens.covidapp.model.summary.Summary;
 import com.pens.covidapp.utils.Constant;
 
 import java.util.List;
@@ -38,6 +39,10 @@ public interface ApiService {
     //BASE URL03
     @GET("/api/provinsi")
     Call<DataProvince> getProvince();
+
+    //BASE SUMMARY
+    @GET(Constant.END_POINT_SUMMARY)
+    Call<Summary> getSummary();
 
 
 }

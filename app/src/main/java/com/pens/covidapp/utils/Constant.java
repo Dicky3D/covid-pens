@@ -19,6 +19,8 @@ public class Constant {
     //end point base url_03
     public static final String END_POINT_PROVINSI= "/api/provinsi/";
 
+    //end point base SUMMARY
+    public static final String END_POINT_SUMMARY = "/summary";
 
 
     public static final String covid_01 = "covid01";
@@ -30,7 +32,7 @@ public class Constant {
     public static final String date_03 = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String date_04 = "yyyyMMddHHmmssSSS";
     public static final String date_05 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    public static final String date_06 = "yyyy-MM-dd'T'HH:mm:ss.Z";
+    public static final String date_06 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 
 //2020-08-19T16:27:42.000Z

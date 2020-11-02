@@ -82,7 +82,7 @@ public class Utils {
         long timeZone = TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS);
 
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(Constant.date_05, Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constant.date_06, Locale.US);
 
         cal.setTime(sdf.parse(date));
         cal.add(Calendar.HOUR, Integer.parseInt(String.valueOf(timeZone)));
@@ -119,7 +119,7 @@ public class Utils {
     }
 
     public static String persen(int pembagi, int pembilang, String i) {
-        Log.d("MainActivity","pembagi : "+pembagi+" pembilang : "+pembilang);
+       // Log.d("MainActivity","pembagi : "+pembagi+" pembilang : "+pembilang);
 
         double a = pembagi;
         double b = pembilang;

@@ -54,11 +54,11 @@
                                 android:textColorHint="@color/colorWhite"
                                 android:textSize="@dimen/dimen_12sp" />
 
-                            <ImageButton
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@color/colorPrimary"
-                                android:src="@drawable/ic_more_vert_white" />
+<!--                            <ImageButton-->
+<!--                                android:layout_width="40dp"-->
+<!--                                android:layout_height="40dp"-->
+<!--                                android:background="@color/colorPrimary"-->
+<!--                                android:src="@drawable/ic_more_vert_white" />-->
 
                         </LinearLayout>
 
@@ -451,6 +451,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_total_country"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:hint="(0)"

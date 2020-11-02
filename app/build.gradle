@@ -17,6 +17,7 @@ android {
         buildConfigField "String", "BASE_URL_01", '"https://covid19.mathdro.id"'
         buildConfigField "String", "BASE_URL_02", '"https://api.kawalcorona.com"'
         buildConfigField "String", "BASE_URL_03", '"https://indonesia-covid-19.mathdro.id/"'
+        buildConfigField "String", "BASE_URL_SUMMARY", '"https://api.covid19api.com"'
 
 
     }
