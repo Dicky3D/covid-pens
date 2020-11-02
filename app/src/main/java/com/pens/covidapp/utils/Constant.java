@@ -1,5 +1,7 @@
 package com.pens.covidapp.utils;
 
+import retrofit2.http.GET;
+
 public class Constant {
 
     public static final String BASE_URL_01 = "https://covid19.mathdro.id";
@@ -12,8 +14,10 @@ public class Constant {
 
     //end point base url_02
     public static final String END_POINT_INDONESIA = "/indonesia/";
-    public static final String END_POINT_PROVINSI= "/indonesia/provinsi/";
+    public static final String END_POINT_COUNTRY ="/";
 
+    //end point base url_03
+    public static final String END_POINT_PROVINSI= "/api/provinsi/";
 
 
 

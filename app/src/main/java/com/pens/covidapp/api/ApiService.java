@@ -3,6 +3,7 @@ package com.pens.covidapp.api;
 import com.pens.covidapp.model.covid_02.DataProvince;
 import com.pens.covidapp.model.covid_02.Indonesia;
 import com.pens.covidapp.model.covid_02.RootIndonesia;
+import com.pens.covidapp.model.covid_country.CountryList;
 import com.pens.covidapp.utils.Constant;
 
 import java.util.List;
@@ -29,7 +30,14 @@ public interface ApiService {
     //================Service BASE URL 02================//
     @GET("/indonesia/")
     Call<List<Indonesia>> getIndonesia();
+
+    @GET("/")
+    Call<CountryList> getCountry();
+
+
+    //BASE URL03
     @GET("/api/provinsi")
     Call<DataProvince> getProvince();
+
 
 }

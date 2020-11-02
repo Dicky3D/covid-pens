@@ -1,8 +1,5 @@
 package com.pens.covidapp.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,13 +9,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.pens.covidapp.BuildConfig;
 import com.pens.covidapp.R;
 import com.pens.covidapp.api.ApiClient;
 import com.pens.covidapp.api.ApiService;
 import com.pens.covidapp.model.covid_01.SummaryWorld;
 import com.pens.covidapp.model.covid_02.Indonesia;
-import com.pens.covidapp.model.covid_02.RootIndonesia;
+import com.pens.covidapp.model.covid_country.CountryList;
 import com.pens.covidapp.utils.Constant;
 import com.pens.covidapp.utils.Utils;
 
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     TextView txtRiwayat;
     RelativeLayout rlProvinsi;
 
+    RecyclerView rvCountry;
+
+
 
     //    global
     private String sPositif = "", sSembuh = "", sKasus = "", sMati = "", sUpdate = "",
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private String sInaPositif = "", sInaSembuh = "", sInaKasus = "", sInaMati = "",
             sInaNewPositif = "", sInaNewMati = "", sInaPopulasi = "", sInaKritis = "",
             sInaPerMati = "", sInaPerKasus = "", sInaPerSembuh = "";
-    private int inaPositif = 0, inaSembuh = 0, inaMati =0;
+    private int inaPositif = 0, inaSembuh = 0, inaMati = 0;
 
 
     @Override
@@ -82,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         txtPersentaseKasus = findViewById(R.id.main_ina_persentase_kasus);
         txtPersentaseSembuh = findViewById(R.id.main_ina_persentase_sembuh);
         txtPersentaseMati = findViewById(R.id.main_ina_persentase_mati);
+
+        //country
+        rvCountry = findViewById(R.id.rv_country);
 
         //button
         rlProvinsi = findViewById(R.id.main_ina_btn_provinsi);
@@ -110,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Constant.send_positif, sInaPositif);
         intent.putExtra(Constant.send_sembuh, sInaSembuh);
         intent.putExtra(Constant.send_mati, sInaMati);
-        Log.d("ProvinceActivity","inamati : "+sInaMati);
+        Log.d("ProvinceActivity", "inamati : " + sInaMati);
         startActivity(intent);
     }
 
@@ -122,6 +129,41 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getTotalData();
+//        getCountry();
+    }
+
+    private void getCountry(){
+        Log.d(TAG,"getCountry");
+
+        if (!Utils.internet(getApplicationContext())) {
+            unload(getString(R.string.txt_koneksi_masalah));
+            return;
+        }
+        ApiService apiService = ApiClient.getClient(BuildConfig.BASE_URL_02).create(ApiService.class);
+
+        apiService.getCountry().enqueue(new Callback<CountryList>() {
+
+            @Override
+            public void onResponse(Call<CountryList> call, Response<CountryList> response) {
+                Log.d(TAG,"onResponse");
+                try {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG,"response : "+response.toString());
+
+                    }
+                } catch (Exception e) {
+                    unload(getString(R.string.txt_koneksi_masalah));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CountryList> call, Throwable t) {
+                unload(getString(R.string.txt_koneksi_masalah));
+
+            }
+        });
+
     }
 
     private void getTotalData() {
@@ -134,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         apiService.getSummaryWorld().enqueue(new Callback<SummaryWorld>() {
             @Override
             public void onResponse(Call<SummaryWorld> call, Response<SummaryWorld> response) {
+                Log.d(TAG,"onResponse TotalData ");
                 try {
                     if (response.isSuccessful()) {
                         SummaryWorld sWorld = response.body();
@@ -142,17 +185,18 @@ public class MainActivity extends AppCompatActivity {
                         gSembuh = sWorld.getRecovered().getValue();
                         gMati = sWorld.getDeaths().getValue();
 
-                        gPositif = gKasus- (gSembuh+gMati);
+                        gPositif = gKasus - (gSembuh + gMati);
 
 
-                        txtTotalKasus.setText(Utils.number(""+gKasus));
-                        txtPositif.setText(Utils.number(""+gPositif));
-                        txtMati.setText(Utils.number(""+gMati));
-                        txtSembuh.setText(Utils.number(""+gSembuh));
+                        txtTotalKasus.setText(Utils.number("" + gKasus));
+                        txtPositif.setText(Utils.number("" + gPositif));
+                        txtMati.setText(Utils.number("" + gMati));
+                        txtSembuh.setText(Utils.number("" + gSembuh));
                         String dateUpdate = sWorld.getLastUpdate();
                         txtUpdate.setText("Diperbarui pada " + Utils.getTimezone(dateUpdate));
 
-                        getIndonesia();
+//                        getIndonesia();
+                        getCountry();
                     } else {
                         Log.d(TAG, "koneksi");
 
@@ -173,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getIndonesia() {
-        Log.d(TAG,"getIndonesia");
+        Log.d(TAG, "getIndonesia");
 
         if (!Utils.internet(getApplicationContext())) {
             unload(getString(R.string.txt_koneksi_masalah));
@@ -193,24 +237,22 @@ public class MainActivity extends AppCompatActivity {
                         Indonesia idn = response.body().get(0);
 
                         sInaKasus = Utils.removeCharacter(idn.getPositif());
-                        sInaPositif= Utils.removeCharacter(idn.getDirawat());
-                        sInaSembuh= Utils.removeCharacter(idn.getSembuh());
-                        sInaMati= Utils.removeCharacter(idn.getMeninggal());
+                        sInaPositif = Utils.removeCharacter(idn.getDirawat());
+                        sInaSembuh = Utils.removeCharacter(idn.getSembuh());
+                        sInaMati = Utils.removeCharacter(idn.getMeninggal());
 
 
                         txtIdnKasus.setText(Utils.number(sInaKasus));
                         txtIdnPositif.setText(Utils.number(sInaPositif));
                         txtIdnSembuh.setText(Utils.number(sInaSembuh));
                         txtIdnMati.setText(Utils.number(sInaMati));
-                        Log.d(TAG,"kasus : "+gKasus +" sembuh : "+gSembuh+" gMati : "+gMati);
-
-
+                        Log.d(TAG, "kasus : " + gKasus + " sembuh : " + gSembuh + " gMati : " + gMati);
 
 
                         sInaPerKasus = "(" + Utils.persen(gKasus, Integer.parseInt(sInaKasus), "2") + "% dari Global)";
                         sInaPerMati = "(" + Utils.persen(gMati, Integer.parseInt(sInaMati), "2") + "%)";
                         sInaPerSembuh = "(" + Utils.persen(gSembuh, Integer.parseInt(sInaSembuh), "2") + "%)";
-                        Log.d(TAG,"ina kasus : "+sInaPerKasus +" sembuh : "+sInaPerSembuh+" gMati : "+sInaPerMati);
+                        Log.d(TAG, "ina kasus : " + sInaPerKasus + " sembuh : " + sInaPerSembuh + " gMati : " + sInaPerMati);
 
                         txtPersentaseKasus.setText(sInaPerKasus);
                         txtPersentaseMati.setText(sInaPerMati);
@@ -218,6 +260,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         unload("");
+
+                        getCountry();
                     }
                 } catch (Exception e) {
                     Log.d(TAG, " getIndonesia koneksi");
@@ -229,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Indonesia>> call, Throwable t) {
-                Log.d(TAG,"error "+t.toString());
+                Log.d(TAG, "error " + t.toString());
                 unload(getString(R.string.txt_koneksi_masalah));
 
             }
