@@ -12,19 +12,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.pens.covidapp.BuildConfig;
 import com.pens.covidapp.R;
 import com.pens.covidapp.adapter.CountryAdapter;
-import com.pens.covidapp.adapter.ProvinceAdapter;
 import com.pens.covidapp.api.ApiClient;
 import com.pens.covidapp.api.ApiService;
-import com.pens.covidapp.model.covid_01.SummaryWorld;
-import com.pens.covidapp.model.covid_02.Indonesia;
-import com.pens.covidapp.model.covid_country.CountryList;
+import com.pens.covidapp.model.indonesia.Indonesia;
 import com.pens.covidapp.model.summary.Country;
 import com.pens.covidapp.model.summary.Global;
 import com.pens.covidapp.model.summary.Summary;
@@ -60,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
     //button
     TextView txtRiwayat;
     RelativeLayout rlProvinsi;
-
-
 
     //    global
     private String sPositif = "", sSembuh = "", sKasus = "", sMati = "", sUpdate = "",
@@ -140,42 +134,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         getSummary();
-//        getTotalData();
-//        getCountry();
-    }
-
-    private void getCountry() {
-        Log.d(TAG, "getCountry");
-
-        if (!Utils.internet(getApplicationContext())) {
-            unload(getString(R.string.txt_koneksi_masalah));
-            return;
-        }
-        ApiService apiService = ApiClient.getClient(BuildConfig.BASE_URL_02).create(ApiService.class);
-
-        apiService.getCountry().enqueue(new Callback<CountryList>() {
-
-            @Override
-            public void onResponse(Call<CountryList> call, Response<CountryList> response) {
-                Log.d(TAG, "onResponse");
-                try {
-                    if (response.isSuccessful()) {
-                        Log.d(TAG, "response : " + response.toString());
-
-                    }
-                } catch (Exception e) {
-                    unload(getString(R.string.txt_koneksi_masalah));
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<CountryList> call, Throwable t) {
-                unload(getString(R.string.txt_koneksi_masalah));
-
-            }
-        });
-
     }
 
     private void getSummary() {
@@ -193,9 +151,7 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.d(TAG,"Summary "+response.body().toString());
 
                         Summary summary = response.body();
-
                         Global global = summary.getGlobal();
-
 
                         gKasus = global.getTotalConfirmed();
                         gSembuh = global.getTotalRecovered();
@@ -213,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
                         txtUpdate.setText("Diperbarui pada " + Utils.getTimezone(dateUpdate));
 
                         updateCountry(summary.getCountries());
-
                         getIndonesia();
 
                     }
@@ -242,55 +197,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getTotalData() {
-        if (!Utils.internet(getApplicationContext())) {
-            unload(getString(R.string.txt_koneksi_masalah));
-            return;
-        }
-
-        ApiService apiService = ApiClient.getClient(BuildConfig.BASE_URL_01).create(ApiService.class);
-        apiService.getSummaryWorld().enqueue(new Callback<SummaryWorld>() {
-            @Override
-            public void onResponse(Call<SummaryWorld> call, Response<SummaryWorld> response) {
-                Log.d(TAG, "onResponse TotalData ");
-                try {
-                    if (response.isSuccessful()) {
-                        SummaryWorld sWorld = response.body();
-
-                        gKasus = sWorld.getConfirmed().getValue();
-                        gSembuh = sWorld.getRecovered().getValue();
-                        gMati = sWorld.getDeaths().getValue();
-
-                        gPositif = gKasus - (gSembuh + gMati);
-
-
-                        txtTotalKasus.setText(Utils.number("" + gKasus));
-                        txtPositif.setText(Utils.number("" + gPositif));
-                        txtMati.setText(Utils.number("" + gMati));
-                        txtSembuh.setText(Utils.number("" + gSembuh));
-                        String dateUpdate = sWorld.getLastUpdate();
-                        txtUpdate.setText("Diperbarui pada " + Utils.getTimezone(dateUpdate));
-
-//                        getIndonesia();
-                        //getCountry();
-                    } else {
-                        Log.d(TAG, "koneksi");
-
-                        unload(getString(R.string.txt_koneksi_masalah));
-
-                    }
-                } catch (Exception e) {
-                    unload(getString(R.string.txt_koneksi_masalah));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SummaryWorld> call, Throwable t) {
-                unload(getString(R.string.txt_koneksi_masalah));
-
-            }
-        });
-    }
 
     private void getIndonesia() {
         Log.d(TAG, "getIndonesia");
@@ -334,13 +240,11 @@ public class MainActivity extends AppCompatActivity {
                         txtPersentaseMati.setText(sInaPerMati);
                         txtPersentaseSembuh.setText(sInaPerSembuh);
 
-
                         unload("");
 
                     }
                 } catch (Exception e) {
                     Log.d(TAG, " getIndonesia koneksi");
-
                     unload(getString(R.string.txt_koneksi_masalah));
                 }
 

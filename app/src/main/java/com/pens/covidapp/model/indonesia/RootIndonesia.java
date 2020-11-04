@@ -1,7 +1,6 @@
-package com.pens.covidapp.model.covid_02;
+package com.pens.covidapp.model.indonesia;
 
 import java.util.List;
-import com.google.gson.annotations.Expose;
 
 public class RootIndonesia {
     public List<Indonesia> listIndonesia;

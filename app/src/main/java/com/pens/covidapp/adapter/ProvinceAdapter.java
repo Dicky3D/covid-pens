@@ -11,10 +11,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pens.covidapp.R;
-import com.pens.covidapp.model.covid_02.Province;
+import com.pens.covidapp.model.indonesia.Province;
 import com.pens.covidapp.utils.Utils;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -100,7 +98,6 @@ public class ProvinceAdapter extends RecyclerView.Adapter<ProvinceAdapter.ViewHo
                 txtProvinsiKasusPersen;
 
         CardView cvProvinsi;
-
 
         private int  kasus, positif, sembuh, mati;
         private String nama = "", perKasus = "", perPositif = "", perSembuh = "", perMati = "";

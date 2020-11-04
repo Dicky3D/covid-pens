@@ -1,4 +1,4 @@
-package com.pens.covidapp.model.covid_02;
+package com.pens.covidapp.model.indonesia;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

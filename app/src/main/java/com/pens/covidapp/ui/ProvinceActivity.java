@@ -26,8 +26,8 @@ import com.pens.covidapp.R;
 import com.pens.covidapp.adapter.ProvinceAdapter;
 import com.pens.covidapp.api.ApiClient;
 import com.pens.covidapp.api.ApiService;
-import com.pens.covidapp.model.covid_02.DataProvince;
-import com.pens.covidapp.model.covid_02.Province;
+import com.pens.covidapp.model.indonesia.DataProvince;
+import com.pens.covidapp.model.indonesia.Province;
 import com.pens.covidapp.utils.Constant;
 import com.pens.covidapp.utils.Utils;
 
@@ -81,13 +81,9 @@ public class ProvinceActivity extends AppCompatActivity {
         });
 
         listProvince = new ArrayList<>();
-        Log.d(TAG,"total Kasus : "+totalKasus + " totalPositif : "+totalPositif +" totalSembuh : "+totalSembuh);
+        Log.d(TAG, "total Kasus : " + totalKasus + " totalPositif : " + totalPositif + " totalSembuh : " + totalSembuh);
 
         setChart();
-
-
-
-
 
     }
 
@@ -99,8 +95,8 @@ public class ProvinceActivity extends AppCompatActivity {
             return;
         }
 
-        ApiService apiService = ApiClient.getClient(BuildConfig.BASE_URL_03).create(ApiService.class);
-        Log.d(TAG, "url "+BuildConfig.BASE_URL_03);
+        ApiService apiService = ApiClient.getClient(BuildConfig.BASE_URL_INDONESIA).create(ApiService.class);
+        Log.d(TAG, "url " + BuildConfig.BASE_URL_INDONESIA);
 
         apiService.getProvince().enqueue(new Callback<DataProvince>() {
             @Override
@@ -108,12 +104,12 @@ public class ProvinceActivity extends AppCompatActivity {
                 try {
                     if (response.isSuccessful()) {
                         unload("");
-                        if(listProvince.size()>0)
+                        if (listProvince.size() > 0)
                             listProvince.clear();
 
-                         listProvince = response.body().getData();
+                        listProvince = response.body().getData();
 
-                         listProvince.remove(listProvince.size()-1);
+                        listProvince.remove(listProvince.size() - 1);
                         sKasus = "(" + listProvince.size() + ")";
 
                         txtKasus.setText(sKasus);
@@ -149,8 +145,8 @@ public class ProvinceActivity extends AppCompatActivity {
             totalSembuh = getIntent().getStringExtra(Constant.send_sembuh);
             totalMati = getIntent().getStringExtra(Constant.send_mati);
 
-            if(!totalKasus.isEmpty() && !totalPositif.isEmpty() &&!totalSembuh.isEmpty() && !totalMati.isEmpty()){
-                Log.d(TAG,"total Kasus : "+totalKasus + " totalPositif : "+totalPositif +" totalMati : "+totalMati);
+            if (!totalKasus.isEmpty() && !totalPositif.isEmpty() && !totalSembuh.isEmpty() && !totalMati.isEmpty()) {
+                Log.d(TAG, "total Kasus : " + totalKasus + " totalPositif : " + totalPositif + " totalMati : " + totalMati);
 
                 DisplayMetrics metrics = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -192,10 +188,9 @@ public class ProvinceActivity extends AppCompatActivity {
 
             }
 
-        }else{
+        } else {
             return;
         }
-
 
 
     }

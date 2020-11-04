@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pens.covidapp.R;
-import com.pens.covidapp.model.covid_country.Attributes;
 import com.pens.covidapp.model.summary.Country;
 import com.pens.covidapp.utils.Utils;
 
